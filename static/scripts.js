@@ -70,7 +70,7 @@ function updatePrice() {
 
             // Ẩn ảnh loading
             loadingElement.style.display = 'none';
-        }, 3000); // Hiện giá sau 3 giây
+        }, 2000); // Hiện giá sau 3 giây
     } else {
         priceDisplay.style.display = 'none'; // Ẩn giá nếu chưa nhập đủ thông tin
         loadingElement.style.display = 'none';  // Ẩn ảnh loading nếu chưa nhập đủ
