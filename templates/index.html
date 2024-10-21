@@ -70,16 +70,11 @@
                 <h2>THAM KHẢO CƯỚC PHÍ</h2> <!-- Chuyển tiêu đề vào đây -->
                 
                 <label for="from">Từ:</label>
-                <select id="from">
-                    <option value="">Nhập địa chỉ</option>
-                    <!-- Các địa chỉ khác -->
-                </select>
-        
+                <input type="text" id="from" name="from" placeholder="Nhập địa chỉ">
+                
                 <label for="to">Đến:</label>
-                <select id="to">
-                    <option value="">Nhập địa chỉ</option>
-                    <!-- Các địa chỉ khác -->
-                </select>
+                <input type="text" id="to" name="to" placeholder="Nhập địa chỉ">
+                
         
                 <label for="vehicle">Chọn loại xe:</label>
                 <select id="vehicle">
@@ -88,7 +83,14 @@
                     <option value="xe_tai_nho">Xe tải nhỏ (1.25 tấn)</option>
                     <option value="xe_tai_trung">Xe tải trung (2.4 tấn)</option>
                 </select>
-        
+                <img id="loading" src="static/loading.webp" alt="Loading..." />
+                
+                <!-- Phần tử hiển thị số tiền -->
+                <div id="price-display">
+                    <span id="price"></span> <!-- Chỉ hiển thị số tiền mà không có chữ "Giá" -->
+                </div>
+            
+
                 <button type="submit">ĐẶT XE NGAY!</button>
             </form>
             

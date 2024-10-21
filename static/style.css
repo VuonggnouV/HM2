@@ -162,7 +162,7 @@ ul li::before {
     content: "✔";
     position: absolute;
     left: 0;
-    color: #27ae60;
+    color: #008100cb;
 }
 
 .pricing {
@@ -200,6 +200,15 @@ ul li::before {
     font-size: 16px;
 }
 
+.pricing form input {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 .pricing form select {
     padding: 10px;
     width: 80%;
@@ -219,6 +228,23 @@ ul li::before {
     cursor: pointer;
     width: 80%;
 }
+
+
+#loading {
+    display: none; /* Ẩn ảnh loading mặc định */
+    width: 50px;  /* Kích thước nhỏ hơn cho ảnh loading */
+    height: auto; /* Kích thước nhỏ hơn cho ảnh loading */
+    margin: 0 20px 20px 0; /* Khoảng cách giữa ảnh loading và giá */
+}
+#price-display {
+    display: none; /* Ẩn giá mặc định */
+    align-items: center; 
+    font-size: 30px; /* Kích thước chữ cho giá */
+    color: #a60102; /* Màu cho số tiền */
+    margin: 0 20px 20px 0; /* Khoảng cách giữa ảnh loading và giá */
+    font-weight: bold;
+}
+
 
 .pricing form button:hover {
     background-color: darkred;
