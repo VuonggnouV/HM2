@@ -100,6 +100,11 @@ button {
     height: 50px;
     margin: 5px;
 }
+#success-message{
+    display:none; 
+    color: green; 
+    font-size: 30px;
+}
 
 #price-display{
     padding: 20px 20px 20px 0;  
