@@ -14,7 +14,7 @@
 
     <div class="container">
         <div class="form-section">
-            <form action="/booking3" method="get">
+            <form id="booking-form">
                 <h2>Bạn có muốn chọn thêm các dịch vụ?</h2>
 
                 <div class="checkbox-group">
@@ -45,6 +45,12 @@
                 <div id="price-display">
                     <span id="price"></span>
                 </div>
+                
+                <!-- Thông báo thành công -->
+                <div id="success-message">
+                    Đặt xe thành công!<br>
+                    Mã đơn hàng: <strong><span id="order-id"></span></strong>
+                </div>
         
                 <!-- Submit button -->
                 <button type="submit">ĐẶT NGAY</button>
@@ -66,6 +72,8 @@
             var loadingElementUnique = document.getElementById('loading'); // Phần tử cho ảnh loading
             var priceElementUnique = document.getElementById('price');
             var priceDisplayUnique = document.getElementById('price-display');
+            var successMessage = document.getElementById('success-message'); // Phần tử thông báo thành công
+            var orderIdElement = document.getElementById('order-id'); // Phần tử hiển thị mã đơn hàng
 
             // Thời gian hiển thị loading (3 giây)
             var timeoutUnique;
@@ -108,6 +116,20 @@
             // Lắng nghe sự kiện thay đổi trên tất cả checkbox
             checkboxesUnique.forEach(function(checkbox) {
                 checkbox.addEventListener('change', updateUniquePrice);
+            });
+
+            // Chặn hành vi submit form và hiển thị thông báo đặt thành công
+            var form = document.getElementById('booking-form');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Ngăn chặn gửi form
+
+                // Tạo mã đơn hàng ngẫu nhiên (6 chữ số)
+                var orderId = Math.floor(100000 + Math.random() * 900000);
+                orderIdElement.textContent = orderId; // Gán mã đơn hàng cho phần tử
+
+                // Hiển thị thông báo thành công
+                successMessage.style.display = 'block';
+
             });
         });
     </script>
