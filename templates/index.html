@@ -64,42 +64,40 @@
             </div>
         </div>
     </section>
-    <div class="pricing">
-        <div class="pricing-wrapper">
-            <form>
-                <h2>THAM KHẢO CƯỚC PHÍ</h2> <!-- Chuyển tiêu đề vào đây -->
-                
-                <label for="from">Từ:</label>
-                <input type="text" id="from" name="from" placeholder="Nhập địa chỉ">
-                
-                <label for="to">Đến:</label>
-                <input type="text" id="to" name="to" placeholder="Nhập địa chỉ">
-                
-        
-                <label for="vehicle">Chọn loại xe:</label>
-                <select id="vehicle">
-                    <option value="">Chọn loại xe</option>
-                    <option value="ba_gac">Ba gác (700kg)</option>
-                    <option value="xe_tai_nho">Xe tải nhỏ (1.25 tấn)</option>
-                    <option value="xe_tai_trung">Xe tải trung (2.4 tấn)</option>
-                </select>
-                <img id="loading" src="static/loading.webp" alt="Loading..." />
-                
-                <!-- Phần tử hiển thị số tiền -->
-                <div id="price-display">
-                    <span id="price"></span> <!-- Chỉ hiển thị số tiền mà không có chữ "Giá" -->
-                </div>
+<!-- Phần hiện tại trong index.html -->
+<div class="pricing">
+    <div class="pricing-wrapper">
+        <form action="/booking" method="get"> <!-- Changed to redirect to /booking -->
+            <h2>THAM KHẢO CƯỚC PHÍ</h2>
             
-
-                <button type="submit">ĐẶT XE NGAY!</button>
-            </form>
+            <label for="from">Từ:</label>
+            <input type="text" id="from" name="from" placeholder="Nhập địa chỉ">
             
-            <!-- Phần hình ảnh bản đồ -->
-            <div class="map-image">
-                <img src="static/map.png" alt="Bản đồ">
+            <label for="to">Đến:</label>
+            <input type="text" id="to" name="to" placeholder="Nhập địa chỉ">
+            
+            <label for="vehicle">Chọn loại xe:</label>
+            <select id="vehicle">
+                <option value="">Chọn loại xe</option>
+                <option value="ba_gac">Ba gác (700kg)</option>
+                <option value="xe_tai_nho">Xe tải nhỏ (1.25 tấn)</option>
+                <option value="xe_tai_trung">Xe tải trung (2.4 tấn)</option>
+            </select>
+            <img id="loading" src="static/loading.webp" alt="Loading..." />
+            
+            <div id="price-display">
+                <span id="price"></span> <!-- Chỉ hiển thị số tiền mà không có chữ "Giá" -->
             </div>
+
+            <button type="submit">ĐẶT XE NGAY!</button> <!-- Action is now form submission to booking page -->
+        </form>
+        
+        <div class="map-image">
+            <img src="static/map.png" alt="Bản đồ">
         </div>
     </div>
+</div>
+
     
     <div class="guide">
         <div class="guide-wrapper">

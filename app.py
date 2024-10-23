@@ -104,6 +104,18 @@ def submit_driver_registration():
     flash('Đăng ký thành công! Bạn có thể đăng nhập ngay bây giờ.')
     return redirect(url_for('index'))
 
+@app.route('/booking')
+def booking_page():
+    return render_template('booking.html')
+
+@app.route('/booking2')
+def booking_page2():
+    return render_template('booking2.html')
+
+@app.route('/booking3')
+def booking_page3():
+    return render_template('booking3.html')
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)  # Xóa thông tin tên người dùng khỏi phiên

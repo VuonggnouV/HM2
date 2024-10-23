@@ -81,3 +81,9 @@ function updatePrice() {
 fromInput.addEventListener('input', updatePrice);
 toInput.addEventListener('input', updatePrice);
 vehicleSelect.addEventListener('change', updatePrice);
+
+
+
+
+
+
