@@ -5,6 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOMOMOVING</title>
     <link rel="stylesheet" href="static/style.css">
+    <script>
+        /*async function fetchSuggestions(query, inputId) {
+            let dropdown = document.getElementById(inputId + "-dropdown");
+            dropdown.innerHTML = "<div class='dropdown-item'>Đang tìm kiếm...</div>";
+            dropdown.style.display = "block"; // Hiển thị dropdown khi nhập
+
+            try {
+                const response = await fetch(`/address_suggestions?query=${query}`);
+                const suggestions = await response.json();
+                dropdown.innerHTML = ""; // Xóa thông báo "Đang tìm kiếm..."
+
+                if (suggestions.length === 0) {
+                    dropdown.style.display = "none"; // Ẩn dropdown nếu không có gợi ý
+                    return;
+                }
+
+                suggestions.forEach(addr => {
+                    let div = document.createElement("div");
+                    div.classList.add("dropdown-item");
+                    div.innerHTML = addr;
+                    div.onclick = function() {
+                        document.getElementById(inputId).value = addr;
+                        dropdown.innerHTML = "";
+                        dropdown.style.display = "none";
+                    };
+                    dropdown.appendChild(div);
+                });
+            } catch (error) {
+                console.error("Lỗi lấy gợi ý:", error);
+                dropdown.innerHTML = "<div class='dropdown-item'>Không thể lấy dữ liệu</div>";
+            }
+        }
+
+        // Ẩn dropdown khi click ra ngoài
+        document.addEventListener("click", function(event) {
+            document.querySelectorAll(".autocomplete-dropdown").forEach(dropdown => {
+                if (!event.target.matches("input")) {
+                    dropdown.style.display = "none";
+                }
+            });
+        });*/
+        let debounceTimer;  // Biến lưu timer debounce
+    let isFetching = false; // Trạng thái để kiểm soát request
+
+    function debounceFetch(query, inputId) {
+        clearTimeout(debounceTimer); // Xóa timer cũ nếu có
+        if (query.length < 10) return; // Chỉ gọi API nếu nhập từ 10 ký tự trở lên
+
+        debounceTimer = setTimeout(() => {
+            if (!isFetching) { // Chỉ gọi API nếu không có request nào đang chạy
+                fetchSuggestions(query, inputId);
+            }
+        }, 50000); // Trì hoãn 5s sau khi người dùng dừng nhập
+    }
+
+    async function fetchSuggestions(query, inputId) {
+        let dropdown = document.getElementById(inputId + "-dropdown");
+        dropdown.innerHTML = "<div class='dropdown-item'>Đang tìm kiếm...</div>";
+        dropdown.style.display = "block";
+
+        isFetching = true; // Đánh dấu rằng request đang chạy
+
+        try {
+            const response = await fetch(`/address_suggestions?query=${query}`);
+            const suggestions = await response.json();
+            dropdown.innerHTML = "";
+
+            if (suggestions.length === 0) {
+                dropdown.style.display = "none";
+                isFetching = false;
+                return;
+            }
+
+            suggestions.forEach(addr => {   
+                let div = document.createElement("div");
+                div.classList.add("dropdown-item");
+                div.innerHTML = addr;
+                div.onclick = function() {
+                    document.getElementById(inputId).value = addr;
+                    localStorage.setItem(inputId, addr);
+                    dropdown.innerHTML = "";
+                    dropdown.style.display = "none";
+                };
+                dropdown.appendChild(div);
+            });
+        } catch (error) {
+            console.error("Lỗi lấy gợi ý:", error);
+            dropdown.innerHTML = "<div class='dropdown-item'>Không thể lấy dữ liệu</div>";
+        } finally {
+            isFetching = false; // Đánh dấu rằng request đã hoàn thành
+        }
+    }
+
+    </script>
+    
 </head>
 <body>
     <header>
@@ -67,29 +162,47 @@
 <!-- Phần hiện tại trong index.html -->
 <div class="pricing">
     <div class="pricing-wrapper">
-        <form action="/booking" method="get"> <!-- Changed to redirect to /booking -->
+        <form action="/booking3" method="get">
             <h2>THAM KHẢO CƯỚC PHÍ</h2>
             
-            <label for="from">Từ:</label>
-            <input type="text" id="from" name="from" placeholder="Nhập địa chỉ">
+            <!-- Ô input "Từ" và dropdown -->
+            <div class="input-group" style="position: relative;">
+                <label for="from">Từ:</label>
+                <input type="text" id="from" name="from" placeholder="Nhập địa chỉ" onkeyup="fetchSuggestions(this.value, 'from')">
+                <div id="from-dropdown" class="autocomplete-dropdown"></div>
+            </div>
             
-            <label for="to">Đến:</label>
-            <input type="text" id="to" name="to" placeholder="Nhập địa chỉ">
+            <!-- Ô input "Đến" và dropdown -->
+            <div class="input-group" style="position: relative;">
+                <label for="to">Đến:</label>
+                <input type="text" id="to" name="to" placeholder="Nhập địa chỉ" onkeyup="fetchSuggestions(this.value, 'to')">
+                <div id="to-dropdown" class="autocomplete-dropdown"></div>
+            </div>
             
-            <label for="vehicle">Chọn loại xe:</label>
-            <select id="vehicle">
-                <option value="">Chọn loại xe</option>
-                <option value="ba_gac">Ba gác (700kg)</option>
-                <option value="xe_tai_nho">Xe tải nhỏ (1.25 tấn)</option>
-                <option value="xe_tai_trung">Xe tải trung (2.4 tấn)</option>
-            </select>
+            <!-- Ô chọn loại xe -->
+            <div class="input-group">
+                <label for="vehicle">Chọn loại xe:</label>
+                <select id="vehicle">
+                    <option value="">Chọn loại xe</option>
+                    <option value="ba_gac">Ba gác (700kg)</option>
+                    <option value="xe_tai_nho">Xe tải nhỏ (1.25 tấn)</option>
+                    <option value="xe_tai_trung">Xe tải trung (2.4 tấn)</option>
+                </select>
+            </div>
+            
             <img id="loading" src="static/loading.webp" alt="Loading..." />
             
-            <div id="price-display">
-                <span id="price"></span> <!-- Chỉ hiển thị số tiền mà không có chữ "Giá" -->
+            <!-- Hiển thị khoảng cách -->
+            <div id="distance-display">
+                <span id="distance"></span>
             </div>
-
-            <button type="submit">ĐẶT XE NGAY!</button> <!-- Action is now form submission to booking page -->
+            
+            <!-- Hiển thị giá tiền -->
+            <div id="price-display">
+                <span id="price"></span>
+            </div>
+            
+            <button type="submit">ĐẶT XE NGAY!</button>
         </form>
         
         <div class="map-image">
@@ -97,6 +210,18 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("from").addEventListener("input", function() {
+            localStorage.setItem("from", this.value);
+        });
+
+        document.getElementById("to").addEventListener("input", function() {
+            localStorage.setItem("to", this.value);
+        });
+    });
+    
+</script>
 
     
     <div class="guide">

@@ -6,31 +6,31 @@
     <title>Chúc mừng - HoMo</title>
     <link rel="stylesheet" href="static/success.css">
     <script>
-        // JavaScript để đếm ngược và chuyển hướng
         let countdown = 5;
         function startCountdown() {
             const countdownElement = document.getElementById("countdown");
             const interval = setInterval(() => {
                 if (countdown > 1) {
                     countdown--;
-                    countdownElement.textContent = `Sẽ chuyển hướng về trang chính trong ${countdown}...`;
+                    countdownElement.textContent = `Sẽ chuyển hướng về trang chính trong ${countdown} giây...`;
                 } else {
-                    clearInterval(interval); // Dừng đếm ngược khi kết thúc
-                    window.location.href = "/"; // Chuyển hướng về trang chính sau khi đếm ngược
+                    clearInterval(interval);
+                    window.location.href = "/"; // Chuyển hướng về trang chính
                 }
-            }, 1000); // Mỗi giây giảm 1
+            }, 1000);
         }
-        window.onload = startCountdown; // Bắt đầu đếm ngược khi trang tải xong
+        window.onload = startCountdown;
     </script>
 </head>
 <body>
-
     <div class="container">
-        <h1>Chúc mừng bạn đã trở thành <br> đối tác của HoMo!</h1>
+        {% if session['user_type'] == 'driver' %}
+            <h1>Chúc mừng bạn đã trở thành đối tác vận chuyển của HoMo!</h1>
+        {% else %}
+            <h1>Chúc mừng! Bạn đã đăng ký thành công.</h1>
+        {% endif %}
         <img src="static/image.png" alt="HoMo Logo" class="logo">
-
-        <p id="countdown">Sẽ chuyển hướng về trang chính trong 5...</p> <!-- Vùng chứa đếm ngược -->
+        <p id="countdown">Sẽ chuyển hướng về trang chính trong 5 giây...</p>
     </div>
-
 </body>
 </html>

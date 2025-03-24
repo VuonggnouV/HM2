@@ -13,7 +13,7 @@
         </div>
         <h2>Đăng ký trở thành tài xế của HoMo</h2>
         
-        <form class="register-form" action="/submit_driver_registration" method="post">
+        <form class="register-form" action="{{ url_for('driver_register') }}" method="post">
             <div class="input-group">
                 <label for="name">Tên:</label>
                 <input type="text" id="name" name="name" required>
