@@ -18,20 +18,17 @@ document.getElementById("backToTop").addEventListener("click", function(event) {
     window.scrollTo({top: 0, behavior: 'smooth'}); // Lăn lên đầu trang với hiệu ứng mượt
 });
 
-
-
 // Lấy các trường "Từ", "Đến", và "Loại xe"
 var fromInput = document.getElementById('from');
 var toInput = document.getElementById('to');
 var vehicleSelect = document.getElementById('vehicle');
 
-// Lấy phần tử hiển thị ảnh loading và giá
-var loadingElement = document.getElementById('loading'); // Phần tử cho ảnh loading
+// Lấy phần tử hiển thị ảnh loading, khoảng cách và giá
+var loadingElement = document.getElementById('loading');
 var priceElement = document.getElementById('price');
 var priceDisplay = document.getElementById('price-display');
-
-// Thời gian hiển thị loading (3 giây)
-var timeout;
+var distanceDisplay = document.getElementById('distance-display');
+var durationDisplay = document.getElementById('duration-display');
 
 // Kiểm tra khi thay đổi các trường
 function updatePrice() {
@@ -39,51 +36,74 @@ function updatePrice() {
     var toValue = toInput.value.trim();
     var vehicleType = vehicleSelect.value;
 
-    // Nếu đang có timeout trước đó, hãy xóa nó
-    if (timeout) {
-        clearTimeout(timeout);
-    }
+    if (!fromValue || !toValue || !vehicleType) return;
 
-    // Nếu cả ba trường đều đã được nhập
-    if (fromValue !== "" && toValue !== "" && vehicleType !== "") {
-        // Hiển thị ảnh loading và ẩn giá
-        loadingElement.style.display = 'inline-block'; // Hiển thị ảnh loading
-        priceDisplay.style.display = 'none'; // Ẩn giá trong lúc loading
+    // Hiển thị loading
+    loadingElement.style.display = 'block';
+    priceDisplay.style.display = 'none';
+    distanceDisplay.style.display = 'none';
 
-        // Đặt timeout để hiển thị giá sau 3 giây
-        timeout = setTimeout(function() {
-            var price = 0;
-
-            // Random giá dựa trên loại xe đã chọn
-            if (vehicleType === 'ba_gac') {
-                price = Math.floor(Math.random() * (200000 - 100000 + 1)) + 100000;
-            } else if (vehicleType === 'xe_tai_nho') {
-                price = Math.floor(Math.random() * (300000 - 200000 + 1)) + 200000;
-            } else if (vehicleType === 'xe_tai_trung') {
-                price = Math.floor(Math.random() * (400000 - 300000 + 1)) + 300000;
+    // Gọi API để lấy khoảng cách
+    fetch(`/address_calculator?from=${encodeURIComponent(fromValue)}&to=${encodeURIComponent(toValue)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Lỗi khi gọi API');
             }
-
-            if (price > 0) {
-                priceElement.textContent = price.toLocaleString('vi-VN') + ' đ';
-                priceDisplay.style.display = 'block'; // Hiển thị giá
-            }
-
-            // Ẩn ảnh loading
+            return response.json();
+        })
+        .then(data => {
             loadingElement.style.display = 'none';
-        }, 2000); // Hiện giá sau 3 giây
-    } else {
-        priceDisplay.style.display = 'none'; // Ẩn giá nếu chưa nhập đủ thông tin
-        loadingElement.style.display = 'none';  // Ẩn ảnh loading nếu chưa nhập đủ
-    }
+            var distance = data.distance / 1000; // Chuyển đổi từ mét sang km (giữ nguyên số thập phân)
+            var duration = data.duration / 60; // Chuyển đổi từ giây sang phút
+
+            // **Làm tròn lên số km để tính giá**
+            var roundedDistance = Math.ceil(distance);
+
+            // Tính giá tiền theo quy tắc mới
+            var basePrice = 0;
+            var extraPricePerKm = 0;
+
+            if (vehicleType === 'ba_gac') {
+                basePrice = 100000; // 2km đầu
+                extraPricePerKm = 10000; // Mỗi km sau đó
+            } else if (vehicleType === 'xe_tai_nho') {
+                basePrice = 200000; // 2km đầu
+                extraPricePerKm = 20000; // Mỗi km sau đó
+            } else if (vehicleType === 'xe_tai_trung') {
+                basePrice = 250000; // 2km đầu
+                extraPricePerKm = 30000; // Mỗi km sau đó
+            }
+
+            var price = basePrice;
+            if (roundedDistance > 2) {
+                price += (roundedDistance - 2) * extraPricePerKm;
+            }
+
+            // **Hiển thị khoảng cách đúng số thập phân**
+            document.getElementById('distance').innerText = `Khoảng cách: ${distance.toFixed(2)} km`;
+            distanceDisplay.style.display = 'block';
+
+            // Hiển thị giá tiền
+            document.getElementById('price').innerText = `Giá tiền: ${price.toLocaleString()} VND`;
+            priceDisplay.style.display = 'block';
+            
+            // Lưu vào localStorage
+            localStorage.setItem('distance', distance);
+            localStorage.setItem('price', price);
+
+        })
+        .catch(error => {
+            loadingElement.style.display = 'none';
+            document.getElementById('distance').innerText = 'Không thể lấy thông tin khoảng cách';
+            document.getElementById('price').innerText = '';
+            distanceDisplay.style.display = 'block';
+            priceDisplay.style.display = 'block';
+            console.error('Lỗi:', error);
+        });
 }
 
-// Lắng nghe sự kiện thay đổi trên cả ba trường
-fromInput.addEventListener('input', updatePrice);
-toInput.addEventListener('input', updatePrice);
+
+// Gán sự kiện onchange để tự động cập nhật giá
+fromInput.addEventListener('change', updatePrice);
+toInput.addEventListener('change', updatePrice);
 vehicleSelect.addEventListener('change', updatePrice);
-
-
-
-
-
-

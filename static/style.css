@@ -4,7 +4,42 @@
     padding: 0;
     box-sizing: border-box;
 }
+.input-group {
+    margin-bottom: 20px;
+    width: 100%;
+}
 
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.input-group input, .input-group select {
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    width: calc(100% - 20px); /* Đảm bảo dropdown có cùng chiều rộng với input */
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+    top: 100; /* Đặt dropdown ngay bên dưới input */
+    left: 0;
+    margin-top: -17px; /* Khoảng cách giữa input và dropdown */
+    border-radius: 2px; /* Tùy chỉnh để bo góc nếu cần */
+    box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.1); /* Tùy chỉnh thêm đổ bóng */
+
+}
 /* Cài đặt font và màu sắc chung */
 body {
     font-family: Arial, sans-serif;
@@ -40,8 +75,7 @@ header {
 .btn-group button {
     width: 120px; /* Hoặc kích thước mà bạn muốn */
     padding: 10px 0; /* Padding dọc cho nút */
-    background-color: #a60102
-    ;
+    background-color: #a60102;
     color: white;
     font-size: 16px;
     border: none;
@@ -182,6 +216,7 @@ ul li::before {
 
 /* Căn chỉnh form bên trái */
 .pricing form {
+    position: relative; /* Thêm dòng này */
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -236,7 +271,7 @@ ul li::before {
     height: auto; /* Kích thước nhỏ hơn cho ảnh loading */
     margin: 0 20px 20px 0; /* Khoảng cách giữa ảnh loading và giá */
 }
-#price-display {
+#price-display,#distance-display {
     display: none; /* Ẩn giá mặc định */
     align-items: center; 
     font-size: 30px; /* Kích thước chữ cho giá */
